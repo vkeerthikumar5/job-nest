@@ -41,7 +41,7 @@ class AdminController extends Controller
 
     public function stats()
     {
-        $company = Auth::user(); // logged-in recruiter (Company)
+        $company = Auth::user(); 
 
         
 

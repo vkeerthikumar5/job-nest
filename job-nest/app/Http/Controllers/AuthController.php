@@ -16,7 +16,6 @@ class AuthController extends Controller
             'email'             => 'required|email|unique:users',
             'password'          => 'required|min:6',
             'role'              => 'required|in:user,admin',
-            
             'contact_number'    => 'nullable|string|max:20',
         ]);
     
@@ -25,13 +24,15 @@ class AuthController extends Controller
             'email'            => $request->email,
             'role'             => $request->role, 
             'password'         => Hash::make($request->password),
-            
             'contact_number'   => $request->contact_number,
-             
+        ]);
+        return response()->json([
+            'message' => 'User registered successfully',
+            'company' => $user
         ]);
     }
-    
-    //Recruiter Registration
+
+    // Recruiter Registration
     public function recruiterRegister(Request $request) {
         $request->validate([
             'name'              => 'required|string|max:255',
@@ -48,9 +49,9 @@ class AuthController extends Controller
             'email'            => $request->email,
             'role'             => 'admin', // recruiter role
             'password'         => Hash::make($request->password),
-            'address'  => $request->address,
+            'address'          => $request->address,
             'established_year' => $request->established_year,
-            'website'  => $request->website,
+            'website'          => $request->website,
             'contact_number'   => $request->contact_number,
             'is_active'        => false, // inactive by default
         ]);
@@ -60,6 +61,7 @@ class AuthController extends Controller
             'company' => $company
         ]);
     }
+
     // Login
     public function login(Request $request) {
         $request->validate([
@@ -73,7 +75,6 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
     
-        // Check if admin account is active
         if ($user->role === 'admin' && !$user->is_active) {
             return response()->json([
                 'message' => 'Your account is pending activation by the super admin.'
@@ -89,7 +90,8 @@ class AuthController extends Controller
             'name' => $user->name,
         ]);
     }
-    
+
+    // Recruiter login
     public function recruiter_login(Request $request) {
         $request->validate([
             'email' => 'required|email',
@@ -102,7 +104,6 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
     
-        // Check if admin account is active
         if (!$user->is_active) {
             return response()->json([
                 'message' => 'Your account is pending activation by the super admin.'
@@ -125,24 +126,23 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-    // Get profile (protected)
+    // Get profile
     public function me(Request $request) {
         return $request->user();
     }
 
-    public function index()
-    {
+    // List all users (for admin)
+    public function index() {
         $recruiters = User::all();
         return response()->json($recruiters);
     }
-    
-        
-        public function toggleActivation($id) {
-            $user = User::findOrFail($id);
-            $user->is_active = !$user->is_active;
-            $user->save();
-        
-            return response()->json($user);
-        }
-        
+
+    // Toggle user activation (for admin)
+    public function toggleActivation($id) {
+        $user = User::findOrFail($id);
+        $user->is_active = !$user->is_active;
+        $user->save();
+
+        return response()->json($user);
+    }
 }

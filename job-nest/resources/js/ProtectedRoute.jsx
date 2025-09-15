@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import api from './api_r';
-
-export default function ProtectedRoute({ children, role }) {
+import { Outlet } from 'react-router-dom';
+export default function ProtectedRoute({ role }) {
   const [authorized, setAuthorized] = useState(null);
 
   useEffect(() => {
@@ -19,7 +19,6 @@ export default function ProtectedRoute({ children, role }) {
       return;
     }
 
-    // Optional: verify token with backend
     api.get('/me')
       .then(() => setAuthorized(true))
       .catch(() => setAuthorized(false));
@@ -27,5 +26,5 @@ export default function ProtectedRoute({ children, role }) {
 
   if (authorized === null) return <div>Loading...</div>;
   if (!authorized) return <Navigate to="/login" replace />;
-  return children;
+  return <Outlet />;
 }

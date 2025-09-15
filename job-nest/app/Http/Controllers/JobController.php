@@ -21,7 +21,7 @@ class JobController extends Controller
         ]);
 
         $job = Job::create([
-            'company_id' => Auth::id(), // logged-in recruiter
+            'company_id' => Auth::id(), 
             'title' => $request->title,
             'desc'=>$request->desc,
             'skills' => $request->skills,
