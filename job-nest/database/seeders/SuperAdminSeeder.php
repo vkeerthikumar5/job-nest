@@ -16,11 +16,11 @@ class SuperAdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'superadmin@jobnest.com'], // unique identifier
+            ['email' => 'superadmin@jobnest.com'], 
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make('SuperAdmin@123'), // strong password
-                'role' => 'super-admin', // or 1 if you’re using numeric roles
+                'password' => Hash::make('SuperAdmin@123'), 
+                'role' => 'super-admin', 
                 
             ]
         );
